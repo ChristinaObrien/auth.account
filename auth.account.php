@@ -2,7 +2,7 @@
     // WePay PHP SDK - http://git.io/mY7iQQ
     require 'wepay.php';
     // application settings
-    $client_id = 123456789;
+    $client_id = 113456789;
     $client_secret = "1a3b5c8d9";
     $access_token = "1a3b5c8d9";
     // change to useProduction for live environments
