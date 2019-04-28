@@ -1,0 +1,355 @@
+This Interests Me
+Pretty cool stuff for pretty cool people.
+Skip to content
+HOMECONTACT PRIVACY POLICY
+PHP: Login to website with cURL.
+This is a tutorial on how to login to a website using cURL and PHP. In this tutorial, we will create a simple PHP bot that signs in to a website before accessing a password-protected page.
+
+
+ 
+In this example, I’ve created a number of named constants at the top of the script. Be sure to change these configuration values to match your needs.
+
+
+<?php
+
+//The username or email address of the account.
+define('USERNAME', 'Katie555');
+
+//The password of the account.
+define('PASSWORD', 'Di77LyWB');
+
+//Where our cookie information will be stored (needed for authentication).
+define('COOKIE_FILE', 'cookie.txt');
+
+//URL of the login form.
+define('LOGIN_FORM_URL', 'https://secure.ssa.gov/RIL/SiView.action/login.php');
+
+//Login action URL. Sometimes, this is the same URL as the login form.
+define('LOGIN_ACTION_URL', 'https://secure.ssa.gov/RIL/SiView.action/login-check.php');
+
+
+//An associative array that represents the required form fields.
+//You will need to change the keys / index names to match the name of the form
+//fields.
+$postValues = array(
+    'username' => USERNAME,
+    'password' => PASSWORD
+);
+
+//Initiate cURL.
+$curl = curl_init();
+
+//Set the URL that we want to send our POST request to. In this
+//case, it's the action URL of the login form.
+curl_setopt($curl, CURLOPT_URL, LOGIN_ACTION_URL);
+
+//Tell cURL that we want to carry out a POST request.
+curl_setopt($curl, CURLOPT_POST, true);
+
+//Set our post fields / date (from the array above).
+curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($postValues));
+
+//We don't want any HTTPS errors.
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+//Where our cookie details are saved. This is typically required
+//for authentication, as the session ID is usually saved in the cookie file.
+curl_setopt($curl, CURLOPT_COOKIEJAR, COOKIE_FILE);
+
+//Sets the user agent. Some websites will attempt to block bot user agents.
+//Hence the reason I gave it a Chrome user agent.
+curl_setopt($curl, CURLOPT_USERAGENT, USER_AGENT);
+
+//Tells cURL to return the output once the request has been executed.
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+//Allows us to set the referer header. In this particular case, we are 
+//fooling the server into thinking that we were referred by the login form.
+curl_setopt($curl, CURLOPT_REFERER, LOGIN_FORM_URL);
+
+//Do we want to follow any redirects?
+curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+
+//Execute the login request.
+curl_exec($curl);
+
+//Check for errors!
+if(curl_errno($curl)){
+    throw new Exception(curl_error($curl));
+}
+
+//We should be logged in by now. Let's attempt to access a password protected page
+curl_setopt($curl, CURLOPT_URL, 'https://secure.ssa.gov/RIL/SiView.action/protected-page.php');
+
+//Use the same cookie file.
+curl_setopt($curl, CURLOPT_COOKIEJAR, COOKIE_FILE);
+
+//Use the same user agent, just in case it is used by the server for session validation.
+curl_setopt($curl, CURLOPT_USERAGENT, USER_AGENT);
+
+//We don't want any HTTPS / SSL errors.
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+//Execute the GET request and print out the result.
+echo curl_exec($curl);
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+<?php
+ 
+//The username or email address of the account.
+define('USERNAME', 'Katie555');
+ 
+//The password of the account.
+define('PASSWORD', 'Di77LyWB');
+ 
+//Set a user agent. This basically tells the server that we are using Chrome ;)
+define('USER_AGENT', 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.2309.372 Safari/537.36');
+ 
+//Where our cookie information will be stored (needed for authentication).
+define('COOKIE_FILE', 'cookie.txt');
+ 
+//URL of the login form.
+define('LOGIN_FORM_URL', 'https://secure.ssa.gov/RIL/SiView.action/login.php');
+ 
+//Login action URL. Sometimes, this is the same URL as the login form.
+define('LOGIN_ACTION_URL', 'https://secure.ssa.gov/RIL/SiView.action/login-check.php');
+ 
+ 
+//An associative array that represents the required form fields.
+//You will need to change the keys / index names to match the name of the form
+//fields.
+$postValues = array(
+    'username' => USERNAME,
+    'password' => PASSWORD
+);
+ 
+//Initiate cURL.
+$curl = curl_init();
+ 
+//Set the URL that we want to send our POST request to. In this
+//case, it's the action URL of the login form.
+curl_setopt($curl, CURLOPT_URL, LOGIN_ACTION_URL);
+ 
+//Tell cURL that we want to carry out a POST request.
+curl_setopt($curl, CURLOPT_POST, true);
+ 
+//Set our post fields / date (from the array above).
+curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($postValues));
+ 
+//We don't want any HTTPS errors.
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+ 
+//Where our cookie details are saved. This is typically required
+//for authentication, as the session ID is usually saved in the cookie file.
+curl_setopt($curl, CURLOPT_COOKIEJAR, COOKIE_FILE);
+ 
+//Sets the user agent. Some websites will attempt to block bot user agents.
+//Hence the reason I gave it a Chrome user agent.
+curl_setopt($curl, CURLOPT_USERAGENT, USER_AGENT);
+ 
+//Tells cURL to return the output once the request has been executed.
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+ 
+//Allows us to set the referer header. In this particular case, we are 
+//fooling the server into thinking that we were referred by the login form.
+curl_setopt($curl, CURLOPT_REFERER, LOGIN_FORM_URL);
+ 
+//Do we want to follow any redirects?
+curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+ 
+//Execute the login request.
+curl_exec($curl);
+ 
+//Check for errors!
+if(curl_errno($curl)){
+    throw new Exception(curl_error($curl));
+}
+ 
+//We should be logged in by now. Let's attempt to access a password protected page
+curl_setopt($curl, CURLOPT_URL, 'http://example.com/protected-page.php');
+ 
+//Use the same cookie file.
+curl_setopt($curl, CURLOPT_COOKIEJAR, COOKIE_FILE);
+ 
+//Use the same user agent, just in case it is used by the server for session validation.
+curl_setopt($curl, CURLOPT_USERAGENT, USER_AGENT);
+ 
+//We don't want any HTTPS / SSL errors.
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+ 
+//Execute the GET request and print out the result.
+echo curl_exec($curl);
+In the PHP code snippet above, we created two HTTP requests with cURL. The first request is a POST request that attempts to authenticate with the server. The second request is a GET request that attempts to access a password-protected page. Obviously, the second request will fail if our first authentication attempt is unsuccessful.
+
+
+ 
+A drilldown of the code:
+
+The USERNAME constant is the username or email address that you use when signing into the website.
+The PASSWORD constant is the password that you use when signing in.
+The USER_AGENT constant contains a user agent string. Setting a user agent can be extremely important, as certain websites will block you from logging in if they think the request is coming from an automated script.  In the example above, I’ve used a user agent for Chrome. Essentially, I am fooling the site in question into thinking that the request is coming from a browser (spoofing).
+The COOKIE_FILE constant contains the name of our cookie file. Remember that most websites tie their sessions to a session ID, which is typically stored in a cookie file in the user’s browser. We will need to replicate this process if we intend on getting past the login page!
+The LOGIN_FORM_URL is a constant that contains the URL of the website’s login form. This can be important, as some websites will check the HTTP referer field. In this case, we want the server to think that we have been redirected by the login form.
+The LOGIN_ACTION_URL constant contains the action URL. i.e. The URL of the script that validates the login. Sometimes, this will be the exact same URL as the login form. Check the HTML of the login form in question (and watch the XHR tab in your developer’s console, just in case the login is Ajax-based).
+We then construct our $postFields array, which represents the form field names and values that we want to send via POST. You will obviously need to tweak the keys of this array to match the field names of the login form in question.
+We initiated cURL; thereby creating a cURL handler.
+We set the request URL to the value of our LOGIN_ACTION_URL constant. i.e. We are telling cURL that this is the URL that we want to send a request to.
+We set CURLOPT_POST to true because we want to perform a POST request (cURL will send a GET request by default).
+We assign our $postFields array to CURLOPT_POSTFIELDS. i.e. “These are the post values that we want to send.”
+We prevent any SSL errors by disabling certain SSL verification features.
+We tell cURL what the name of our cookie file is.
+We set our user agent (see point 3).
+We tell cURL that we want it to return the output that is generated after the request has been made.
+We spoof the HTTP referer field (see point 5).
+We tell cURL that we want to ignore any redirects.
+Finally, after setting all of our options, we execute the POST / login request.
+We check to see if any cURL errors have occurred.
+We change the CURLOPT_URL option to match the URL of the password-protected page that we want to access.
+We provide cURL with the name of our cookie file. This is important, as the server will not recognize us as a logged-in user if we forget to supply it.
+We set the same user agent. Changing this or leaving it out could prove fatal, as some websites will utilize the user agent field to validate user sessions (if a user agent changes from one request to the next, then there’s probably something funky going on).
+Once again, we disable the SSL verification options.
+We execute the GET request and print out the result.
+
+ 
+Facebook Comments
+
+FacebookTwitter
+This entry was posted in Code, PHP Tutorials .
+Post navigation← Calculating VAT with PHP.Generating a 4-digit PIN code with PHP. →
+SEARCH
+Search for:
+ 
+RECENT POSTS
+PHP date: One week ago.
+JQuery: Add a new row to a table.
+PHP: Split string by first occurrence of a character.
+JavaScript: Detect when checkbox is ticked / unticked.
+Calculating the execution time of an AJAX request.
+Comparing two dates in JavaScript.
+Detect HTTPS with JavaScript.
+PHP: Get a random character from a string.
+CATEGORIES
+Abandoned Websites
+Call of Duty
+Cars
+Code
+DayZ
+Drones
+Facebook
+Fantasy Football
+Football
+Funny
+Gaming
+Ireland
+JavaScript
+Linux
+MySQL
+Nostalgia
+People of the Internet
+PHP Tutorials
+Politics
+Programming Humor
+Rant
+Resident Evil 2 Remake
+SEO / Webmaster
+Snapchat
+Stocks
+Sysadmin
+Tinder
+Tips & Tricks
+Twitter Trends
+Uncategorized
+Wexford
+Wexford News
+Privacy Policy
+Toolbox
+Premier League Fixtures Difficulty
